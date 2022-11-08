@@ -84,18 +84,18 @@ end
 M.setup = function()
   vim.api.nvim_create_autocmd(
     { "BufReadCmd", "FileReadCmd" },
-    { pattern = { "scp://*" }, callback = function(args) M.edit(args.match) end }
-  )
+    { pattern = { "scp://*" },
+      callback = function(args) M.edit(args.match) end })
 
   vim.api.nvim_create_autocmd(
     { "BufWriteCmd", "FileWriteCmd" },
-    { pattern = { "/tmp/*/scamp-*" }, callback = function(args) M.write(args.match) end }
-  )
+    { pattern = { "/tmp/*/scamp-*" },
+      callback = function(args) M.write(args.match) end })
 
   vim.api.nvim_create_autocmd(
     { "BufWriteCmd", "FileWriteCmd" },
-    { pattern = { "scp://*" }, callback = function(args) M.overwrite(args.match) end }
-  )
+    { pattern = { "scp://*" },
+      callback = function(args) M.overwrite(args.match) end })
 
   return true
 end
