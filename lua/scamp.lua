@@ -96,6 +96,8 @@ M.setup = function()
     { "BufWriteCmd", "FileWriteCmd" },
     { pattern = { "scp://*" }, callback = function(args) M.overwrite(args.match) end }
   )
+
+  return true
 end
 
 return M
