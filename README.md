@@ -1,9 +1,11 @@
 # scamp 🐕
+![Semantic Versioning 2.0.0]
+![Conventional Commits 1.0.0]
 
 Scamp is a simple Neovim plugin that allows remotely editing files.
 Scamp uses SCP and assumes key-based SSH authentication.
 
-# Installing
+## Installing
 
 Using [slowly](https://github.com/nat-418/slowly.nvim):
 
@@ -23,19 +25,17 @@ require('slowly').setup({
 })
 ```
 
-# Configuration
+## Configuration
 
 Add the following to, e.g., `init.lua`:
 ```lua
 require('scamp').setup()
 ```
 
-# Usage
+## Usage
 
 Scamp hooks into read and write events, so you can simply
-`:edit scp:...` and `:write` normally.
+`:edit scp://user@example.com/whatever` and `:write` normally.
 
-```bash
-$ nvim scp://user@host:/path/to/file
-```
-
+[Conventional Commits 1.0.0]: https://flat.badgen.net/badge/Conventional%20Commits/1.0.0/
+[Semantic Versioning 2.0.0]:  https://flat.badgen.net/badge/Semantic%20Versioning/2.0.0/
