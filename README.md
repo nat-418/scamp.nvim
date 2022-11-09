@@ -2,7 +2,7 @@
 ![Semantic Versioning 2.0.0]
 ![Conventional Commits 1.0.0]
 
-Scamp is a simple Neovim plugin that allows remotely editing files.
+Scamp is a simple Neovim plugin for remotely editing files.
 Scamp uses SCP and assumes key-based SSH authentication.
 
 ## Installing
