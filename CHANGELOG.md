@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/nat-418/scamp.nvim/compare/v1.0.0...v1.1.0) (2022-11-09)
+
+
+### Features
+
+* add user configuration of ssh options ([5673e12](https://github.com/nat-418/scamp.nvim/commit/5673e129669b981b6f0ec18a98a29479adf69f6b))
+
 ## 1.0.0 (2022-11-09)
 
 
