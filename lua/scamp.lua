@@ -2,6 +2,8 @@ local M = {}
 
 M.state = {}
 
+M.scp_prefix = 'scp -o ConnectTimeout=5 '
+
 M.edit = function(url)
   if M.state[url] ~= nil then
     vim.cmd.bdelete()
@@ -9,7 +11,6 @@ M.edit = function(url)
     return true
   end
 
-  print('Reading ' .. url .. '...')
   local user, rest = url:match("^scp://(.*)[@](.*)$")
   local path, file, extension = rest:match("(.-)([^//]-([^//%.]+))$")
 
@@ -18,55 +19,37 @@ M.edit = function(url)
   vim.fn.mkdir(tempdir, "p")
 
   local tempfile = tempdir .. file
+  local log      = vim.fn.system(M.scp_prefix .. url .. ' ' .. tempfile)
 
-  local ok, _ = pcall(vim.cmd, 'silent !scp ' .. url .. ' ' .. tempfile)
-
-  if ok then
+  if vim.v.shell_error ~= 0 then
+    print('Error: failed to edit ' .. url)
+    print(log)
     vim.cmd.bdelete()
-    vim.cmd.edit(tempfile)
-
-    vim.bo.filetype = extension
-
-    M.state[url]      = tempfile
-    M.state[tempfile] = url
-
-    return true
+    return false
   end
 
-  print('Error: failed to edit ' .. tempdir)
-  return false
+  vim.cmd.edit(tempfile)
+
+  vim.bo.filetype = extension
+
+  M.state[url]      = tempfile
+  M.state[tempfile] = url
+
+  return true
 end
 
-M.write = function(file)
+M.write = function(url)
   vim.cmd('silent write')
 
-  local url = M.state[file]
+  local log = vim.fn.system(M.scp_prefix .. vim.fn.expand('%') .. ' ' .. url)
 
-  print('Writing ' .. url .. '...')
-  local ok, _ = pcall(vim.cmd, 'silent !scp % ' .. url)
-
-  if ok then
-    print('Wrote buffer to ' .. url)
-    return true
+  if vim.v.shell_error ~= 0 then
+    print('Error: failed to write ' .. url)
+    print(log)
+    return false
   end
 
-  print('Error: failed to write ' .. url)
-  return false
-end
-
-M.overwrite = function(url)
-  vim.cmd('silent write')
-
-  print('Writing ' .. url .. '...')
-  local ok, _ = pcall(vim.cmd, 'silent !scp % ' .. url)
-
-  if ok then
-    print('Wrote buffer to ' .. url)
-    return true
-  end
-
-  print('Error: failed to write ' .. url)
-  return false
+  return true
 end
 
 M.cmd = function(args)
@@ -90,12 +73,12 @@ M.setup = function()
   vim.api.nvim_create_autocmd(
     { "BufWriteCmd", "FileWriteCmd" },
     { pattern = { "/tmp/*/scamp-*" },
-      callback = function(args) M.write(args.match) end })
+      callback = function(args) M.write(M.state[args.match]) end })
 
   vim.api.nvim_create_autocmd(
     { "BufWriteCmd", "FileWriteCmd" },
     { pattern = { "scp://*" },
-      callback = function(args) M.overwrite(args.match) end })
+      callback = function(args) M.write(args.match) end })
 
   return true
 end
