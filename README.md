@@ -33,8 +33,9 @@ require('slowly').setup({
 
 ## Configuration
 
-Add the following to, e.g., `init.lua`:
+Add the following to your configuration:
 ```lua
+-- ~/.config/nvim/init.lua
 require('scamp').setup()
 ```
 
