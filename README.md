@@ -4,15 +4,21 @@
 
 Scamp is a simple Neovim plugin for remotely editing files.
 Scamp uses SCP and assumes key-based SSH authentication.
+Scamp is designed for people who do not use Netrw, e.g.:
+```lua
+-- ~/.config/nvim/init.lua
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw       = 1
+```
 
 ## Installing
 
 Using [slowly](https://github.com/nat-418/slowly.nvim):
 
 ```lua
+-- ~/.config/nvim/lua/plugins.lua
 require('slowly').setup({
   disabled_builtins = {
-    -- Scamp is designed for people who don't use Netrw.
     "netrw",
     "netrwPlugin",
     "netrwSettings",
