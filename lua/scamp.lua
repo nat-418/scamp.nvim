@@ -64,7 +64,15 @@ M.cmd = function(args)
   return false
 end
 
-M.setup = function()
+M.setup = function(opts)
+  if opts ~= nil and opts.scp_options ~= nil then
+    local options = ''
+    for _, each in ipairs(opts.scp_options) do
+      options = options .. ' -o ' .. each
+    end
+    M.scp_prefix = 'scp' .. options .. ' '
+  end
+
   vim.api.nvim_create_autocmd(
     { "BufReadCmd", "FileReadCmd" },
     { pattern = { "scp://*" },

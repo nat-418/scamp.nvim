@@ -34,9 +34,23 @@ require('slowly').setup({
 ## Configuration
 
 Add the following to your configuration:
+
 ```lua
 -- ~/.config/nvim/init.lua
 require('scamp').setup()
+```
+
+This setup function accepts a table of configuratio options.
+Here are the defaults:
+
+```lua
+-- ~/.config/nvim/init.lua
+require('scamp').setup({
+  -- see man(5) ssh_config for more control options
+  scp_options = {
+    'ConnectTimeout=5'
+  }
+})
 ```
 
 ## Usage
