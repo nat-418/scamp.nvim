@@ -40,7 +40,7 @@ Add the following to your configuration:
 require('scamp').setup()
 ```
 
-This setup function accepts a table of configuratio options.
+This setup function accepts a table of configuration options.
 Here are the defaults:
 
 ```lua
