@@ -14,7 +14,7 @@ vim.g.loaded_netrw       = 1
 ## Installing
 
 ```sh
-$ git clone --depth 1 https://github.com/nat-418/scamp.nvim ~/.local/share/nvim/site/pack/bufala/start/scamp.nvim
+$ git clone --depth 1 https://github.com/nat-418/scamp.nvim ~/.local/share/nvim/site/pack/scamp/start/scamp.nvim
 ```
 
 ## Configuration
