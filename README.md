@@ -15,20 +15,8 @@ vim.g.loaded_netrw       = 1
 
 Using [slowly](https://github.com/nat-418/slowly.nvim):
 
-```lua
--- ~/.config/nvim/lua/plugins.lua
-require('slowly').setup({
-  disabled_builtins = {
-    "netrw",
-    "netrwPlugin",
-    "netrwSettings",
-    "netrwFileHandlers",
-  },
-  plugins = {
-    {url = "https://github.com/nat-418/scamp.nvim", start = true}
-    -- other plugins...
-  }
-})
+```sh
+$ git clone --depth 1 https://github.com/nat-418/scamp.nvim ~/.local/share/nvim/site/pack/bufala/start/scamp.nvim
 ```
 
 ## Configuration
