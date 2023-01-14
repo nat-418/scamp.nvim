@@ -13,8 +13,6 @@ vim.g.loaded_netrw       = 1
 
 ## Installing
 
-Using [slowly](https://github.com/nat-418/slowly.nvim):
-
 ```sh
 $ git clone --depth 1 https://github.com/nat-418/scamp.nvim ~/.local/share/nvim/site/pack/bufala/start/scamp.nvim
 ```
