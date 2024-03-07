@@ -5,90 +5,99 @@ M.state = {}
 M.scp_prefix = 'scp -o ConnectTimeout=5 '
 
 M.edit = function(url)
-  if M.state[url] ~= nil then
-    vim.cmd.bdelete()
-    vim.cmd.edit(M.state[url])
-    return true
-  end
+	if M.state[url] ~= nil then
+		vim.cmd.bdelete()
+		vim.cmd.edit(M.state[url])
+		return true
+	end
 
-  local user, rest = url:match("^scp://(.*)[@](.*)$")
-  local path, file, extension = rest:match("(.-)([^//]-([^//%.]+))$")
+	local user, rest = url:match("^scp://(.*)[@](.*)$")
 
-  local tempdir  = vim.fn.tempname() .. '/scamp-' .. user .. '@' .. path
+	if user == nil then user = "UNKNOWN" end
+	if rest == nil then rest = url:match("^scp://(.*)$") end
 
-  vim.fn.mkdir(tempdir, "p")
+	local path, file, extension = rest:match("(.-)([^//]-([^//%.]+))$")
+	local tempdir               = vim.fn.tempname() .. '/scamp-' .. user .. '@' .. path
 
-  local tempfile = tempdir .. file
-  local log      = vim.fn.system(M.scp_prefix .. url .. ' ' .. tempfile)
+	vim.fn.mkdir(tempdir, "p")
 
-  if vim.v.shell_error ~= 0 then
-    print('Error: failed to edit ' .. url)
-    print(log)
-    vim.cmd.bdelete()
-    return false
-  end
+	local tempfile = tempdir .. file
+	local log      = vim.fn.system(M.scp_prefix .. url .. ' ' .. tempfile)
 
-  vim.cmd.edit(tempfile)
+	if vim.v.shell_error ~= 0 then
+		print('Error: failed to edit ' .. url)
+		print(log)
+		vim.cmd.bdelete()
+		return false
+	end
 
-  vim.bo.filetype = extension
+	vim.cmd.edit(tempfile)
 
-  M.state[url]      = tempfile
-  M.state[tempfile] = url
+	vim.bo.filetype   = extension
 
-  return true
+	M.state[url]      = tempfile
+	M.state[tempfile] = url
+
+	return true
 end
 
 M.write = function(url)
-  vim.cmd('silent write')
+	vim.cmd('silent write')
 
-  local log = vim.fn.system(M.scp_prefix .. vim.fn.expand('%') .. ' ' .. url)
+	local log = vim.fn.system(M.scp_prefix .. vim.fn.expand('%') .. ' ' .. url)
 
-  if vim.v.shell_error ~= 0 then
-    print('Error: failed to write ' .. url)
-    print(log)
-    return false
-  end
+	if vim.v.shell_error ~= 0 then
+		print('Error: failed to write ' .. url)
+		print(log)
+		return false
+	end
 
-  return true
+	return true
 end
 
 M.cmd = function(args)
-  local subcommand = args[1]
-  local url        = args[2]
+	local subcommand = args[1]
+	local url        = args[2]
 
-  local ok, _ = pcall(M[subcommand], url)
+	local ok, _      = pcall(M[subcommand], url)
 
-  if ok then return true end
+	if ok then return true end
 
-  print('Error: bad subcommand.')
-  return false
+	print('Error: bad subcommand.')
+	return false
 end
 
 M.setup = function(opts)
-  if opts ~= nil and opts.scp_options ~= nil then
-    local options = ''
-    for _, each in ipairs(opts.scp_options) do
-      options = options .. ' -o ' .. each
-    end
-    M.scp_prefix = 'scp' .. options .. ' '
-  end
+	if opts ~= nil and opts.scp_options ~= nil then
+		local options = ''
+		for _, each in ipairs(opts.scp_options) do
+			options = options .. ' -o ' .. each
+		end
+		M.scp_prefix = 'scp' .. options .. ' '
+	end
 
-  vim.api.nvim_create_autocmd(
-    { "BufReadCmd", "FileReadCmd" },
-    { pattern = { "scp://*" },
-      callback = function(args) M.edit(args.match) end })
+	vim.api.nvim_create_autocmd(
+		{ "BufReadCmd", "FileReadCmd" },
+		{
+			pattern = { "scp://*" },
+			callback = function(args) M.edit(args.match) end
+		})
 
-  vim.api.nvim_create_autocmd(
-    { "BufWriteCmd", "FileWriteCmd" },
-    { pattern = { "/tmp/*/scamp-*" },
-      callback = function(args) M.write(M.state[args.match]) end })
+	vim.api.nvim_create_autocmd(
+		{ "BufWriteCmd", "FileWriteCmd" },
+		{
+			pattern = { "/tmp/*/scamp-*" },
+			callback = function(args) M.write(M.state[args.match]) end
+		})
 
-  vim.api.nvim_create_autocmd(
-    { "BufWriteCmd", "FileWriteCmd" },
-    { pattern = { "scp://*" },
-      callback = function(args) M.write(args.match) end })
+	vim.api.nvim_create_autocmd(
+		{ "BufWriteCmd", "FileWriteCmd" },
+		{
+			pattern = { "scp://*" },
+			callback = function(args) M.write(args.match) end
+		})
 
-  return true
+	return true
 end
 
 return M
