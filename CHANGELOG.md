@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/nat-418/scamp.nvim/compare/v1.1.0...v1.1.1) (2024-03-07)
+
+
+### Bug Fixes
+
+* handle no username ([f7c6d2d](https://github.com/nat-418/scamp.nvim/commit/f7c6d2dd1c351d8858def013686f884636638aea))
+
 ## [1.1.0](https://github.com/nat-418/scamp.nvim/compare/v1.0.0...v1.1.0) (2022-11-09)
 
 
